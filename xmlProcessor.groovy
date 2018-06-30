@@ -20,9 +20,9 @@ class Table {
 	def schema
 	def columns = []
 	def primaryKey = null
-	def primaryKeyType = "xs:integer"
+	def primaryKeyType = "xs:string"
 	def foreignKey = null
-	def foreignKeyType = "xs:integer"
+	def foreignKeyType = "xs:string"
 	def foreignKeyPath = []
 }
 
@@ -69,7 +69,8 @@ def showElement(myTables,doc_xml,doc_xsd,element,table,path,colNamePrefix)
 		keyAttributeType = col.type
 	}
 	// Check if we have a primary key in this table
-	if (nrAttributes == 1 && table.primaryKey == null)
+	// Only do this if we are on the toplevel of a table
+	if (colNamePrefix.size() == 0 && nrAttributes == 1 && table.primaryKey == null)
 	{
 		// if only one attribute we treat it as primarykey
 		table.primaryKey=keyAttribute
@@ -176,12 +177,14 @@ try {
 	// that do not have a primary key
 	def timeStamp = date.getTime()
 	def countRows = 0
+	def totalTableCount = myTables.size()
 
 	myTables.each
 	{
 		if (it.path.size() == 0) {
 			return
 		}
+
 
 		def tableName = it.path.join('.')
 		def tableDefinition  = []
@@ -227,7 +230,7 @@ try {
 				pk = it.@"${table.primaryKey}"
 			}
 			else {
-				pk = timeStamp
+				pk = "${timeStamp}_${countRows}"
 			}
 
 			countRows++
@@ -285,6 +288,7 @@ try {
 	// table name and table definition
 	flowFile = session.putAttribute(flowFile, 'filename', tableName + '.csv')
 	flowFile = session.putAttribute(flowFile, 'tableDefinition', tableDefinition.join('\n'))
+	flowFile = session.putAttribute(flowFile, 'totalTableCount', totalTableCount.toString())
 
 		flowFiles << flowFile
 	}

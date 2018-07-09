@@ -1,5 +1,5 @@
-# nifi-xml
-XML processing with NiFi and Groovy
+# nifi-xml xml2csv
+XML to csv processing with NiFi and Groovy
 
 This NiFi processor written in Groovy is converting a XML tree to tables by flatening it out.
 
@@ -8,3 +8,6 @@ All root branches are converted to tables, if this contains new branches they ar
 For more information and description read the articles behind this code on;
 
 http://max.bback.se/index.php/2018/06/30/xml-to-tables-csv-with-nifi-and-groovy-part-2-of-2/
+
+
+It is very easy to combine this script with my avro script to write avro records instead of csv records.

@@ -82,3 +82,7 @@ a.	Example mother_name for mother element name
 Sometimes XSD schema is very open which will result in many tables, if you know your data and the alternatives of its look, it is better to make a more strict schema which will dramatically lower the number of tables, if you use many  1t1 branches remove them and make them simple elements instead as you then will get shorter column names.
 
 Read the full story in the word document.
+
+
+A new file has been added xml2csv_xml2avro.groovy this new script convert XML to ether csv or avro and process the incoming flow file.
+Also new in this is that the header line is removed and replaced by an avro schema as an attribute to each flow file, this is better as it will be easier for downstream processors to use the data and also to store the output in right format in hive or any other database

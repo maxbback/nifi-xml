@@ -1,20 +1,3 @@
-
-@Grab('commons-io:commons-io:2.4')
-import org.apache.commons.io.IOUtils
-import java.nio.charset.StandardCharsets
-
-flowFile = session.get()
-if(!flowFile)return
-def text = ''
-// Cast a closure with an inputStream parameter to InputStreamCallback
-session.read(flowFile, {inputStream ->
-  text = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
-  // Do something with text here
-} as InputStreamCallback)
-
-
-
-
 import java.nio.charset.StandardCharsets
 @Grab('commons-io:commons-io:2.4')
 import org.apache.commons.io.IOUtils
@@ -259,7 +242,6 @@ session.read(inflowFile, {inputStream ->
   xmlText = IOUtils.toString(inputStream, StandardCharsets.UTF_8)
   // Do something with text here
 } as InputStreamCallback)
-session.transfer(inflowFile, REL_SUCESS)
 
 } catch(e) {
     //log.error('Scripting error', e)
@@ -509,6 +491,9 @@ try {
 		flowFiles << flowFile
 	}
 	session.transfer(flowFiles, REL_SUCCESS)
+	//session.transfer(inflowFile, REL_SUCCESS)
+	session.remove(inflowFile)
+
 } catch(e) {
     //log.error('Scripting error', e)
 		String str= e.getStackTrace().toString()

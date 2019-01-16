@@ -49,6 +49,19 @@ def getNodes (doc,path) {
 	return node
 }
 
+/*
+	Used to iterate down the xml tree based on path and return that node
+*/
+def getParentNode (doc,steps) {
+	def node = doc
+  def i = 0
+  while (i < steps) {
+    node = node..
+    i++
+  }
+	return node
+}
+
 // translate XML types to avro types
 def getAvroField(fieldName,dataType, canBeNull) {
 	if (dataType == "xs:integer") {
@@ -180,13 +193,16 @@ def parseXsdElement(myTables,doc_xsd,element,table,path,colNamePrefix)
 				newtable = new Table()
 				newtable.columns = []
 				newtable.name = "${table.name}_${it.@name}"
+        //log.error " New Table name = " + newtable.name
 				if (table.path.size() > 0) {
 					newtable.path.addAll(table.path)
+
 				}
-				newtable.path.add(it.@name)
 				if (path.size() > 0) {
 					newtable.path.addAll(path)
 				}
+        newtable.path.add(it.@name)
+        //log.error " New Table path = " + newtable.path
 				if (table.primaryKey != null) {
 					newtable.foreignKey = table.primaryKey
 					newtable.foreignKeyType = table.primaryKeyType
@@ -316,8 +332,16 @@ try {
 
 			// get the foreign key for this table
 			if (it.foreignKey) {
-				keyNode = getNodes(doc_xml,it.foreignKeyPath)
-				fk = keyNode.@"${it.foreignKey}"
+        // This part i not needed
+        def noNeed = 0
+//				keyNode = getNodes(doc_xml,it.foreignKeyPath)
+
+// foreign key is wrong
+// it needs to be related to curent node so try .. instead from curent node
+//        log.error " it fk path  = " + it.foreignKeyPath
+//        log.error " it path = " + it.path
+//				fk = keyNode.@"${it.foreignKey}"
+//        log.error " fk init  = " + fk
 			}
 			else {
 				fk = timeStamp
@@ -386,12 +410,29 @@ try {
 				// create csv array
 				colArray = []
 
+        // find out what parent foreign key value is
+        if (table.foreignKey) {
+          foreignKeyDiff = it.path.size() - table.foreignKeyPath.size()
+          fkeyNode = getParentNode(it,foreignKeyDiff)
+          fk = fkeyNode.@"${table.foreignKey}"
+          log.error " it foreignKey key " + table.foreignKey
+          log.error " it fkeyNode  " + fkeyNode
+          log.error " it fk  " + fk
+          log.error " it fk  " + fkeyNode."${table.foreignKey}"
+
+          // Must validate that this always will work, as it is originaly an attribute not a node
+          fk = fkeyNode."${table.foreignKey}"
+        }
+
 				// populate the avro record with data
 				pk = trimValue(table.primaryKeyType,pk)
 				fk = trimValue(table.foreignKeyType,fk)
+        //log.error " fk = " + fk
 
 				if (csvOutput) {
 					// populate the csv col array
+          // If string we should quate it in
+          // To Do
 					colArray.add(pk.toString())
 					colArray.add(fk.toString())
 				}

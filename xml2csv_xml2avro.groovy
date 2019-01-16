@@ -355,10 +355,10 @@ try {
 			// Generate a Avro schema definition from avro json blob
 			avroSchema = new Schema.Parser().parse(avroJsonSchema.toString())
 
-			if (csvOutput) {
-			} else {
+			DataFileWriter<GenericRecord> writer = null
+			if (!csvOutput) {
 				// Create avro writer
-				DataFileWriter<GenericRecord> writer = new DataFileWriter<>(new GenericDatumWriter<GenericRecord>())
+        writer = new DataFileWriter<>(new GenericDatumWriter<GenericRecord>())
 				// Attache the avro schema to output stream
 				writer.create(avroSchema, outputStream)
 

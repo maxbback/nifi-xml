@@ -1,16 +1,16 @@
-# nifi-xml xml2csv
+# nifi-xml xml2csv xml2avro
 XML to csv processing with NiFi and Groovy
+This processor can convert XML to CSV and XML to AVRO
 
 This NiFi processor written in Groovy is converting a XML tree to tables by flatening it out.
 
 All root branches are converted to tables, if this contains new branches they are coverted to separate tables if they are of the type one to many if not it is flattened out into the parent to minimize number of tables.
+A uniqie key and foreign key is defined for each table to ease the table joins, if a natural key exist as an attribute on the branch it is used as the primary key.
 
 For more information and description read the articles behind this code on;
 
 http://max.bback.se/index.php/2018/06/30/xml-to-tables-csv-with-nifi-and-groovy-part-2-of-2/
 
-
-It is very easy to combine this script with my avro script to write avro records instead of csv records.
 
 Xml to table (CSV) transformation with Groovy and NiFi
 

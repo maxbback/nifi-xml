@@ -86,3 +86,5 @@ Read the full story in the word document.
 
 A new file has been added xml2csv_xml2avro.groovy this new script convert XML to ether csv or avro and process the incoming flow file.
 Also new in this is that the header line is removed and replaced by an avro schema as an attribute to each flow file, this is better as it will be easier for downstream processors to use the data and also to store the output in right format in hive or any other database
+
+A NiFi template is availbe containing an example implementation

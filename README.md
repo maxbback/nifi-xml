@@ -1,4 +1,6 @@
 # nifi-xml xml2csv xml2avro
+If you like to contribute to this project leave a message and I will invite you
+
 XML to csv processing with NiFi and Groovy
 This processor can convert XML to CSV and XML to AVRO
 
